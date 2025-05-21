@@ -51,7 +51,7 @@ def connect():
     FOREIGN KEY (countryid) REFERENCES country(countryid)
 );"""
 
-# ---------------- USER HANDLING ---------------- #
+# USER HANDLING
 
 def add_user(firstname, lastname, email, phone, role):
     con, cursor = connect()
@@ -90,22 +90,12 @@ def update_user_record(updated_user):
     con.close()
     return True
 
-"""def update_user_role(userid, role):
-    con, cursor = connect()
-    sql = "UPDATE users SET role = %s WHERE userid = %s"
-    cursor.execute(sql, (role, userid))
-    con.commit()
-    cursor.close()
-    con.close()
-    return True"""
-
-
-# ---------------- TRAVEL HANDLING ---------------- #
+# TRAVEL HANDLING
 
 def add_travel_record(travel_info):
     con, cursor = connect()
     sql = """INSERT INTO travel (userid, institution, city, countryid, travelstart, travelend)
-             VALUES (%s, %s, %s, %s, %s, %s)"""
+            VALUES (%s, %s, %s, %s, %s, %s)"""
     values = (
         travel_info['userid'],
         travel_info['institution'],
@@ -119,14 +109,6 @@ def add_travel_record(travel_info):
     cursor.close()
     con.close()
     return True
-
-"""def get_all_travel():
-    con, cursor = connect()
-    cursor.execute("SELECT * FROM travel")
-    results = cursor.fetchall()
-    cursor.close()
-    con.close()
-    return results"""
 
 def get_travel_by_userid(userid):
     con, cursor = connect()
@@ -181,8 +163,8 @@ def get_travel_by_id(travelid):
 def update_travel_record(updated_travel):
     con, cursor = connect()
     sql = """UPDATE travel
-             SET institution = %s, city = %s, countryid = %s, travelstart = %s, travelend = %s
-             WHERE travelid = %s"""
+            SET institution = %s, city = %s, countryid = %s, travelstart = %s, travelend = %s
+            WHERE travelid = %s"""
     values = (
         updated_travel['institution'],
         updated_travel['city'],
@@ -285,7 +267,7 @@ def get_country_details(normalised_country_name):
     con.close()
     return result
 
-#--------------------COUNTRY DATA
+# COUNTRY DATA
 def load_countries():
     con, cursor = connect()
     cursor.execute("SELECT DISTINCT common_name, official_name, countryid, cca2 FROM country")
