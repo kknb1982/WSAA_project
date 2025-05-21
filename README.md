@@ -1,5 +1,4 @@
 # WSAA_project: Global Galway Travel Management System
-This Project for Web Services and Applications
 
 ## Author
 This project has been written by Kirstin Barnett a student at Atlantic Technological University Galway.
