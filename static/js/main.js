@@ -4,14 +4,12 @@ let travelData = []; // Global variable to store travel data
 // Add new user (new users are automatically added a students)
 function addUser(event) {
     event.preventDefault(); // Prevent the default form submission
-
     const formData = {
         firstname: document.getElementById('firstname').value,
         lastname: document.getElementById('lastname').value,
         email: document.getElementById('email').value,
         phone: document.getElementById('phone').value,
     };
-
     fetch('/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -34,7 +32,8 @@ function addUser(event) {
             messageDiv.textContent = `Error: ${error.message}`;
         });
 }
-// Add new travel record
+
+//Add new travel record
 function submitTravel() {
     const countryInput = document.getElementById('country').value.trim();
     const countryObj = countries.find(c => c.commonname.toLowerCase() === countryInput.toLowerCase());
@@ -51,7 +50,6 @@ function submitTravel() {
         travelstart: document.getElementById('travelstart').value,
         travelend: document.getElementById('travelend').value
     };
-
     fetch('/api/travel', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -78,10 +76,9 @@ function submitTravel() {
     });
 }
 
-// All travel record for the user 
+//All travel records for the user 
 function loadTravel(userid) {
     console.log(`Fetching travel records for user ID: ${userid}`); // Debug log
-
     fetch(`/api/travel/${userid}`)
         .then(response => {
             console.log(`Response status: ${response.status}`); // Debug log
@@ -99,12 +96,10 @@ function loadTravel(userid) {
                 travelList.innerHTML = '<p>No travel records found.</p>';
                 return;
             }
-
             // Create a table element
             const table = document.createElement('table');
             table.setAttribute('border', '1'); 
             table.style.width = '100%'; 
-
             // Create the table header
             const thead = document.createElement('thead');
             thead.innerHTML = `
@@ -118,7 +113,6 @@ function loadTravel(userid) {
                 </tr>
             `;
             table.appendChild(thead);
-
             // Create the table body
             const tbody = document.createElement('tbody');
             data.forEach(travel => {
@@ -137,7 +131,6 @@ function loadTravel(userid) {
                 tbody.appendChild(row);
             });
             table.appendChild(tbody);
-
             // Append the table to the travelList container
             travelList.appendChild(table);
         })
@@ -148,6 +141,7 @@ function loadTravel(userid) {
         });
 }
 
+// Load country information to the page
 function loadCountries() {
     fetch('/api/countries-simple')
         .then(response => {
@@ -165,6 +159,7 @@ function loadCountries() {
         });
 }
 
+//Submit update to a travel event
 function submitUpdateTravel(travelId) {
     console.log(`Updating travel record with ID: ${travelId}`); // Debugging log
 
@@ -173,7 +168,6 @@ function submitUpdateTravel(travelId) {
         alert('Countries data is not available. Please try again later.');
         return;
     }
-
     const countryInput = document.getElementById('country').value.trim();
     const countryObj = countries.find(c => c.commonname.toLowerCase() === countryInput.toLowerCase());
     const messageDiv = document.getElementById('message');
@@ -183,7 +177,6 @@ function submitUpdateTravel(travelId) {
         messageDiv.textContent = 'Invalid country. Please select a valid country from the list.';
         return;
     }
-
     const travelData = {
         userid: "{{session['userid']}}", // Pass the user ID from the session
         travelid: travelId,
@@ -193,7 +186,6 @@ function submitUpdateTravel(travelId) {
         travelstart: document.getElementById('travelstart').value,
         travelend: document.getElementById('travelend').value
     };
-
     fetch(`/update-travel/${travelId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -216,7 +208,7 @@ function submitUpdateTravel(travelId) {
     });
 }
 
-
+//Delete a particular travel event
 function deleteTravel(travelId) {
     if (confirm('Are you sure you want to delete this travel record?')) {
         fetch(`/api/travel/${travelId}`, {
@@ -253,6 +245,7 @@ function deleteTravel(travelId) {
     }
 }
 
+//Send updated user information to the database
 function submitUpdateUser() {
     // Use the currentUserId variable passed from the server
     const userId = window.location.pathname.split('/').pop();
@@ -290,6 +283,7 @@ function submitUpdateUser() {
     });
 }
 
+//Helper to format dates
 function formatDateToDDMMYYYY(dateString) {
     const date = new Date(dateString); // Parse the date string into a Date object
     const day = String(date.getDate()).padStart(2, '0'); // Get the day and pad with leading zero
@@ -298,6 +292,7 @@ function formatDateToDDMMYYYY(dateString) {
     return `${day}-${month}-${year}`; // Return the formatted date
 }
 
+//Load current travel
 function loadCurrentTravel() {
     const userid = "{{session['userid']}}"; // Get the user ID from the session
     fetch('/api/current-travel') // Fetch current travel data from the backend
@@ -319,7 +314,7 @@ function loadCurrentTravel() {
         });
 }
 
-
+//Load All Travel
 function loadAllTravel() {
     const userid = "{{session['userid']}}"; // Get the user ID from the session
     fetch('/api/all-travel') // Fetch current travel data from the backend
@@ -345,12 +340,10 @@ function loadAllTravel() {
 function displayTravelData(data) {
     const travelTableBody = document.getElementById('travelTableBody');
     travelTableBody.innerHTML = ''; // Clear existing rows
-
     if (data.length === 0) {
         travelTableBody.innerHTML = '<tr><td colspan="8">No travel records found.</td></tr>';
         return;
     }
-
     data.forEach(travel => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -361,12 +354,12 @@ function displayTravelData(data) {
             <td><a href="/country-details/${travel.common_name.toLowerCase().replace(/ /g, '-')}">${travel.common_name}</a></td>
             <td>${formatDateToDDMMYYYY(travel.travelstart)}</td>
             <td>${formatDateToDDMMYYYY(travel.travelend)}</td>
-
         `;
         travelTableBody.appendChild(row);
     });
 }
 
+// Default dates for the news search
 function setDefaultDates() {
     const today = new Date();
     const threeDaysAgo = new Date(today);
@@ -384,7 +377,6 @@ function searchNews() {
     let fromDate = document.getElementById('filterFromDate').value;
     let toDate = document.getElementById('filterToDate').value;
     const searchIn = document.getElementById('searchIn').value;
-
     if (fromDate) {
         fromDate = formatDateToYYYYMMDD(fromDate); // Format date to YYYY-MM-DD
     }
@@ -397,7 +389,6 @@ function searchNews() {
         to: toDate,
         searchIn: searchIn
     });
-
     fetch(`/api/news?${params.toString()}`)
         .then(response => {
             if (!response.ok) {
