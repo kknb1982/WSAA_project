@@ -145,3 +145,4 @@ GET /country-details/<country_name>: Get details of a specific country.
 REST Countries API: For country data.
 News API: For fetching travel-related news.
 PythonAnywhere: For hosting and scheduled tasks.
+W3 schools: Fantastic resources on html, css, javascript, python and mysql.
